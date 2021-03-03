@@ -6,6 +6,8 @@ const shirtDesign = document.getElementById('design');
 const shirtColor = document.getElementById('color');
 const jsPunColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
+const activities = document.getElementById('activities');
+const totalCost = document.getElementById('activities-cost');
 
 
 //Clear and focus on Name field by default 
@@ -26,29 +28,46 @@ jobRole.addEventListener ('change', (event) => {
 });
 
 //Clear and disable Color menu by default
-shirtColor.value = shirtColor.firstElementChild.value;
 shirtColor.disabled = true;
+function resetColor () {
+  shirtColor.value = shirtColor.firstElementChild.value;
+}
+resetColor();
 //Clear the shirt Design dropdown by default
 shirtDesign.value = shirtDesign.firstElementChild.value;
-//Show t-shirt Color options based on Design selection 
+//Show t-shirt Color options based on Design selection
+function hideColors (colors) {
+  for (let i = 0; i < colors.length; i++) {
+    colors[i].style.display = 'none';
+  }
+}
+function showColors (colors) {
+  for (let i = 0; i < colors.length; i++) {
+    colors[i].style.display = '';
+  }
+}
+
 shirtDesign.addEventListener('change', (event) => {
   if (event.target.value === 'js puns') {
     shirtColor.disabled = false;
-    for (let i = 0; i < heartColors.length; i++) {
-      heartColors[i].style.display = 'none';
-    }
-    for (let i = 0; i < jsPunColors.length; i++) {
-      jsPunColors[i].style.display = '';
-    }
+    showColors(jsPunColors);
+    hideColors(heartColors);
+    resetColor();
   } else if (event.target.value === 'heart js') {
     shirtColor.disabled = false; 
-    for (let i = 0; i < jsPunColors.length; i++) {
-      jsPunColors[i].style.display = 'none';
-    }
-    for (let i = 0; i < heartColors.length; i++) {
-      heartColors[i].style.display = '';
-    }
+    showColors(heartColors);
+    hideColors(jsPunColors);
+    resetColor();
   } else {
     shirtColor.disabled = true;
+    resetColor();
   }
 });
+
+//Listen for selected checkboxes
+let totalCost = 0;
+activities.addEventListener('change' (event) => {
+  if (event.target === checked) {
+
+  }
+})
