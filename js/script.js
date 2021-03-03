@@ -7,6 +7,7 @@ const shirtColor = document.getElementById('color');
 const jsPunColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 const activities = document.getElementById('activities');
+const checkboxes = document.querySelectorAll('[type=checkbox]');
 const totalCostP = document.getElementById('activities-cost');
 
 
@@ -35,7 +36,7 @@ function resetColor () {
 resetColor();
 //Clear the shirt Design dropdown by default
 shirtDesign.value = shirtDesign.firstElementChild.value;
-//Show t-shirt Color options based on Design selection
+//Functions to show or hide t-shirt Color options
 function hideColors (colors) {
   for (let i = 0; i < colors.length; i++) {
     colors[i].style.display = 'none';
@@ -46,7 +47,7 @@ function showColors (colors) {
     colors[i].style.display = '';
   }
 }
-
+//Event handler for selecting t-shirt design and hiding or showing corresponding colors
 shirtDesign.addEventListener('change', (event) => {
   if (event.target.value === 'js puns') {
     shirtColor.disabled = false;
@@ -64,8 +65,12 @@ shirtDesign.addEventListener('change', (event) => {
   }
 });
 
-//Listen for selected checkboxes
+//Clear checkboxes and cost amount by default
 let costAmount = 0;
+for (let i = 0; i < checkboxes.length; i++) {
+  checkboxes[i].checked = false;
+}
+//Listen for selected activities checkboxes
 activities.addEventListener('change', (event) => {
   let activity = event.target; 
   let activityCost = activity.getAttribute('data-cost');
@@ -75,5 +80,5 @@ activities.addEventListener('change', (event) => {
   if (activity.checked === false) {
     costAmount -= +activityCost;
     }
-  console.log(costAmount);
+  totalCostP.innerHTML = `$${costAmount}`;
 });
