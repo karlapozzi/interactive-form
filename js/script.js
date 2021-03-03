@@ -7,7 +7,7 @@ const shirtColor = document.getElementById('color');
 const jsPunColors = document.querySelectorAll('[data-theme="js puns"]');
 const heartColors = document.querySelectorAll('[data-theme="heart js"]');
 const activities = document.getElementById('activities');
-const totalCost = document.getElementById('activities-cost');
+const totalCostP = document.getElementById('activities-cost');
 
 
 //Clear and focus on Name field by default 
@@ -65,9 +65,15 @@ shirtDesign.addEventListener('change', (event) => {
 });
 
 //Listen for selected checkboxes
-let totalCost = 0;
-activities.addEventListener('change' (event) => {
-  if (event.target === checked) {
-
+let costAmount = 0;
+activities.addEventListener('change', (event) => {
+  let activity = event.target; 
+  let activityCost = activity.getAttribute('data-cost');
+  if (activity.checked) {
+  costAmount += +activityCost;
   }
-})
+  if (activity.checked === false) {
+    costAmount -= +activityCost;
+    }
+  console.log(costAmount);
+});
