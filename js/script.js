@@ -138,43 +138,6 @@ paymentType.addEventListener('change', (event) => {
 });
 
 
-//Form validation helpers
-function isNameValid () {
-  let name = nameField.value;
-  let regex = /\w+/;
-  return regex.test(name);
-}
-function isEmailValid () {
-  let email = emailAddress.value; 
-  let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  //Credit to https://emailregex.com/ for the regex
-  return regex.test(email);
-}
-function isActivitySelected () {
-  let selectedItems = 0;
-  for (let i=0; i < checkboxes.length; i++){
-    if (checkboxes[i].checked) {
-      selectedItems += 1;
-    }
-  }
-  return selectedItems;
-}
-function isCardNumValid () {
-  let card = cardNumber.value; 
-  let cardRegex = /^(\d{13,16})$/;
-  return cardRegex.test(card);
-}
-function isZipValid () {
-  let zip = zipCode.value; 
-  let zipRegex = /^(\d{5})$/;
-  return zipRegex.test(zip);
-}
-function isCVV () {
-  let cvv = cvvNumber.value; 
-  let cvvRegex = /^(\d{3})$/;
-  return cvvRegex.test(cvv);
-}
-
 //Functions to add/remove valid and not-valid classes and hints
 function notValid (element) {
   element.classList.add = 'not-valid';
@@ -186,78 +149,111 @@ function showValid (element) {
   element.lastElementChild.style.display = 'none';
 }
 
-//Real time validation and error messages
-nameField.addEventListener('keyup', () => {
- if (isNameValid() === false) {
-   notValid(nameField.parentElement);
- } else {
-   showValid(nameField.parentElement);
- }
-});
-
-emailAddress.addEventListener('keyup', () => {
-  if (isEmailValid() === false) {
-    notValid(emailAddress.parentElement);
-  } else {
-    showValid(emailAddress.parentElement);
-  }
- });
-
- if (paymentType.value === 'credit-card') {
-  cardNumber.addEventListener('keyup', () => {
-    if (isCardNumValid() === false) {
+//Form validation helpers
+const validations = {
+  name: () => {
+    let name = nameField.value;
+    let regex = /\w+/;
+    if (regex.test(name) == false){
+      notValid(nameField.parentElement);
+    } else {
+      showValid(nameField.parentElement);
+    }
+    return regex.test(name);
+  },
+  email: () => {
+    let email = emailAddress.value; 
+    let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    //Credit to https://emailregex.com/ for the regex
+    if (regex.test(email) == false){
+      notValid(emailAddress.parentElement);
+    } else {
+      showValid(emailAddress.parentElement);
+    }
+    return regex.test(email);
+  },
+  activities: () => {
+    let selectedItems = 0;
+    for (let i=0; i < checkboxes.length; i++){
+      if (checkboxes[i].checked) {
+        selectedItems += 1;
+      }
+    }
+    if (selectedItems == false){
+      notValid(activities);
+    } else {
+      showValid(activities);
+    }
+    return selectedItems;
+  },
+  "cc-num": () => {
+    let card = cardNumber.value; 
+    let regex = /^(\d{13,16})$/;
+    if (regex.test(card) == false){
       notValid(cardNumber.parentElement);
     } else {
       showValid(cardNumber.parentElement);
     }
-  });
-  zipCode.addEventListener('keyup', () => {
-    if (isZipValid() === false) {
+    return regex.test(card);
+  },
+  zip: () => {
+    let zip = zipCode.value; 
+    let regex = /^(\d{5})$/;
+    if (regex.test(zip) == false){
       notValid(zipCode.parentElement);
     } else {
       showValid(zipCode.parentElement);
     }
-  });
-  cvvNumber.addEventListener('keyup', () => {
-    if (isCVV() === false) {
+    return regex.test(zip);
+  },
+  cvv: () => {
+    let cvv = cvvNumber.value; 
+    let regex = /^(\d{3})$/;
+    if (regex.test(cvv) == false){
       notValid(cvvNumber.parentElement);
     } else {
       showValid(cvvNumber.parentElement);
     }
-  });
- }
+    return regex.test(cvv);
+  }
+};
 
-//  function realTimeErrors (element) {
-//    element.addEventListener('keyup', () => {
-//      if
-//    })
-//  }
+//Real time validation and error messages
+function realTimeErrors (element) {
+  element.addEventListener('keyup', () => {
+    validations[element.id]();
+  });
+}
+
+realTimeErrors(nameField);
+realTimeErrors(emailAddress);
+realTimeErrors(cardNumber);
+realTimeErrors(zipCode);
+realTimeErrors(cvvNumber);
+
+activities.addEventListener('change', ()=> {
+  validations.activities();
+})
 
 //Event handler to prevent form submission for invalid fields
 form.addEventListener('submit', (event) => {
-  if (isNameValid() === false) {
+  validations.name();
+  validations.email();
+  validations.activities();
+  if (validations.name() == false ||
+  validations.email() == false ||
+  validations.activities() == false) {
     event.preventDefault();
   } 
-  if (isEmailValid() === false) {
-    event.preventDefault();
-  }
-
-  if (isActivitySelected() === 0) {
-    event.preventDefault();
-    notValid(activities);
-  } else {
-    showValid(activities);
-  }
 //Only prevent form submission for cc fields IF payment option is cc
   if (paymentType.value === 'credit-card') {
-    if (isCardNumValid() === false) {
-        event.preventDefault();
+    validations["cc-num"]();
+    validations.zip();
+    validations.cvv();
+    if (validations['cc-num']() == false || 
+      validations.zip() == false || 
+      validations.cvv() == false) {
+      event.preventDefault();
       }
-    if (isZipValid() === false) {
-      event.preventDefault();
-    }
-    if (isCVV() === false) {
-      event.preventDefault();
-    }
-  }
+      }
 });
