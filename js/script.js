@@ -97,10 +97,10 @@ activities.addEventListener('change', (event) => {
 //Make focus more clear when selecting/de-selecting activities checkboxes
 for (let i = 0; i < checkboxes.length; i++) {
 checkboxes[i].addEventListener('focus', (event) => {
-  let label = event.target.parentNode;
+  let label = event.target.parentElement;
   label.className = 'focus';
 });
-checkboxes[i].addEventListener('blur', (event) => {
+checkboxes[i].addEventListener('blur', () => {
   let label = document.querySelector('.focus');
   label.className = '';
 });
