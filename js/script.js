@@ -186,48 +186,78 @@ function showValid (element) {
   element.lastElementChild.style.display = 'none';
 }
 
-//Event handler for form validation and submission
-form.addEventListener('submit', (event) => {
-//Validate name
-  if (isNameValid() === false) {
-    event.preventDefault();
-    notValid(nameField.parentElement);
-  } else {
-    showValid(nameField.parentElement);
-  }
-//Validate email
+//Real time validation and error messages
+nameField.addEventListener('keyup', () => {
+ if (isNameValid() === false) {
+   notValid(nameField.parentElement);
+ } else {
+   showValid(nameField.parentElement);
+ }
+});
+
+emailAddress.addEventListener('keyup', () => {
   if (isEmailValid() === false) {
-    event.preventDefault();
     notValid(emailAddress.parentElement);
   } else {
     showValid(emailAddress.parentElement);
   }
-//Validate activity selection
+ });
+
+ if (paymentType.value === 'credit-card') {
+  cardNumber.addEventListener('keyup', () => {
+    if (isCardNumValid() === false) {
+      notValid(cardNumber.parentElement);
+    } else {
+      showValid(cardNumber.parentElement);
+    }
+  });
+  zipCode.addEventListener('keyup', () => {
+    if (isZipValid() === false) {
+      notValid(zipCode.parentElement);
+    } else {
+      showValid(zipCode.parentElement);
+    }
+  });
+  cvvNumber.addEventListener('keyup', () => {
+    if (isCVV() === false) {
+      notValid(cvvNumber.parentElement);
+    } else {
+      showValid(cvvNumber.parentElement);
+    }
+  });
+ }
+
+//  function realTimeErrors (element) {
+//    element.addEventListener('keyup', () => {
+//      if
+//    })
+//  }
+
+//Event handler to prevent form submission for invalid fields
+form.addEventListener('submit', (event) => {
+  if (isNameValid() === false) {
+    event.preventDefault();
+  } 
+  if (isEmailValid() === false) {
+    event.preventDefault();
+  }
+
   if (isActivitySelected() === 0) {
     event.preventDefault();
     notValid(activities);
   } else {
     showValid(activities);
   }
-//If payment type is cc, validate card number, zip, and CVV
+//Only prevent form submission for cc fields IF payment option is cc
   if (paymentType.value === 'credit-card') {
     if (isCardNumValid() === false) {
         event.preventDefault();
-        notValid(cardNumber.parentElement);
-      } else {
-        showValid(cardNumber.parentElement);
       }
     if (isZipValid() === false) {
       event.preventDefault();
-      notValid(zipCode.parentElement);
-    } else {
-      showValid(zipCode.parentElement);
     }
     if (isCVV() === false) {
       event.preventDefault();
-      notValid(cvvNumber.parentElement);
-    } else {
-      showValid(cvvNumber.parentElement);
     }
   }
 });
