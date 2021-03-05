@@ -92,8 +92,11 @@ activities.addEventListener('change', (event) => {
   let activityCost = activity.getAttribute('data-cost');
   let activityTime = activity.getAttribute('data-day-and-time');
   if (activity.checked) {
+    //add cost to costAmount
     costAmount += +activityCost;
+    //loop through other checkboxes to look for conflicting times
     for (let i = 0; i < checkboxes.length; i++) {
+      //prevent the selected box from being disabled in this loop
       if (activity !== checkboxes[i] && 
         activityTime === checkboxes[i].getAttribute('data-day-and-time')) {
         checkboxes[i].disabled = true;
@@ -158,7 +161,7 @@ paymentType.addEventListener('change', (event) => {
 });
 
 
-//Functions to add/remove valid and not-valid classes and hints
+//Functions to add/remove validation classes and hints
 function notValid (element) {
   element.classList.add('not-valid');
   element.classList.remove('valid');
@@ -170,7 +173,7 @@ function showValid (element) {
   element.lastElementChild.style.display = 'none';
 }
 
-//Form validation functions to validate required fields and then show/hide helper text
+//Functions to validate required fields and then show/hide helper text
 const validations = {
   name: () => {
     let name = nameField.value;
@@ -281,5 +284,5 @@ form.addEventListener('submit', (event) => {
       validations.cvv() == false) {
       event.preventDefault();
       }
-      }
+  }
 });
