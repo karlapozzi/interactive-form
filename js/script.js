@@ -1,3 +1,6 @@
+/*This is my Treehouse Techdegree Project 3
+It includes features for both the meets and exceeds expectations*/
+
 //Declare variables and select DOM elements from the HTML
 const nameField = document.getElementById('name');
 const emailAddress = document.getElementById('email');
@@ -60,7 +63,7 @@ function showColors (colors) {
     colors[i].style.display = '';
   }
 }
-//Event handler for selecting t-shirt design and hiding or showing corresponding colors
+//Event handler for hiding/showing corresponding colors based on selected design
 shirtDesign.addEventListener('change', (event) => {
   if (event.target.value === 'js puns') {
     shirtColor.disabled = false;
@@ -81,16 +84,33 @@ let costAmount = 0;
 for (let i = 0; i < checkboxes.length; i++) {
   checkboxes[i].checked = false;
 }
-//Listen for selecting/de-selecting activities checkboxes and updating the total cost amount
+/* Listen for selecting/de-selecting activities checkboxes, 
+update the total cost amount, and disable ones with conflicting 
+times (for exceeds expectations requirements)*/
 activities.addEventListener('change', (event) => {
   let activity = event.target; 
   let activityCost = activity.getAttribute('data-cost');
+  let activityTime = activity.getAttribute('data-day-and-time');
   if (activity.checked) {
-  costAmount += +activityCost;
+    costAmount += +activityCost;
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (activity !== checkboxes[i] && 
+        activityTime === checkboxes[i].getAttribute('data-day-and-time')) {
+        checkboxes[i].disabled = true;
+        checkboxes[i].parentElement.classList.add('disabled');
+      }
+    }
   }
   if (activity.checked === false) {
     costAmount -= +activityCost;
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (activity !== checkboxes[i] && 
+        activityTime === checkboxes[i].getAttribute('data-day-and-time')) {
+        checkboxes[i].disabled = false;
+        checkboxes[i].parentElement.classList.remove('disabled');
+      }
     }
+  }
   totalCostP.innerHTML = `Total: $${costAmount}`;
 });
 
@@ -98,11 +118,11 @@ activities.addEventListener('change', (event) => {
 for (let i = 0; i < checkboxes.length; i++) {
 checkboxes[i].addEventListener('focus', (event) => {
   let label = event.target.parentElement;
-  label.className = 'focus';
+  label.classList.add('focus');
 });
-checkboxes[i].addEventListener('blur', () => {
-  let label = document.querySelector('.focus');
-  label.className = '';
+checkboxes[i].addEventListener('blur', (event) => {
+  label = document.querySelector('.focus');
+  label.classList.remove('focus');
 });
 }
 
@@ -140,12 +160,13 @@ paymentType.addEventListener('change', (event) => {
 
 //Functions to add/remove valid and not-valid classes and hints
 function notValid (element) {
-  element.classList.add = 'not-valid';
-  element.classList.remove = 'valid';
+  element.classList.add('not-valid');
+  element.classList.remove('valid');
   element.lastElementChild.style.display = 'flex';
 }
 function showValid (element) {
-  element.classList.add = 'valid';
+  element.classList.add('valid');
+  element.classList.remove('not-valid');
   element.lastElementChild.style.display = 'none';
 }
 
