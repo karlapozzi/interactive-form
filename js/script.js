@@ -132,7 +132,7 @@ function showPayment (paymentOption) {
     ccPayment.style.display = 'none';
   }
 }
-//Event handler for payment options
+//Event handler for payment option changes
 paymentType.addEventListener('change', (event) => {
   showPayment(event.target.value);
 });
@@ -149,7 +149,7 @@ function showValid (element) {
   element.lastElementChild.style.display = 'none';
 }
 
-//Form validation helpers
+//Form validation functions to validate required fields and then show/hide helper text
 const validations = {
   name: () => {
     let name = nameField.value;
@@ -224,18 +224,17 @@ function realTimeErrors (element) {
     validations[element.id]();
   });
 }
-
 realTimeErrors(nameField);
 realTimeErrors(emailAddress);
 realTimeErrors(cardNumber);
 realTimeErrors(zipCode);
 realTimeErrors(cvvNumber);
-
+//The keyup event wasnt' working well with checkboxes so separated those out
 activities.addEventListener('change', ()=> {
   validations.activities();
 })
 
-//Event handler to prevent form submission for invalid fields
+//Event handler to prevent form submission for invalid required fields
 form.addEventListener('submit', (event) => {
   validations.name();
   validations.email();
@@ -245,7 +244,7 @@ form.addEventListener('submit', (event) => {
   validations.activities() == false) {
     event.preventDefault();
   } 
-//Only prevent form submission for cc fields IF payment option is cc
+//Only prevent form submission for cc fields IF cc payment type is selected
   if (paymentType.value === 'credit-card') {
     validations["cc-num"]();
     validations.zip();
