@@ -176,12 +176,25 @@ function isCardValid () {
     return true;
   }
 }
+//Functions to add/remove valid and not-valid classes and hints
+function notValid (element) {
+  element.classList.add = 'not-valid';
+  element.classList.remove = 'valid';
+  element.lastElementChild.style.display = 'flex';
+}
+function showValid (element) {
+  element.classList.add = 'valid';
+  element.lastElementChild.style.display = 'none';
+}
 
 //Event handler for form validation and submission
 form.addEventListener('submit', (event) => {
+  let nameLabel = nameField.parentElement;
   if (isNameValid() === false) {
     event.preventDefault();
-    console.log(`Name cannot be blank`);
+    notValid(nameLabel);
+  } else {
+    showValid(nameLabel);
   }
   if (isEmailValid() === false) {
     event.preventDefault();
