@@ -140,7 +140,7 @@ paymentType.addEventListener('change', (event) => {
 
 //Form validation helpers
 function isNameValid () {
-  let name = nameField.value; 
+  let name = nameField.value;
   let regex = /\w+/;
   return regex.test(name);
 }
@@ -159,23 +159,22 @@ function isActivitySelected () {
   }
   return selectedItems;
 }
-function isCardValid () {
-  if (paymentType.value === 'credit-card') {
+function isCardNumValid () {
   let card = cardNumber.value; 
   let cardRegex = /^(\d{13,16})$/;
+  return cardRegex.test(card);
+}
+function isZipValid () {
   let zip = zipCode.value; 
   let zipRegex = /^(\d{5})$/;
+  return zipRegex.test(zip);
+}
+function isCVV () {
   let cvv = cvvNumber.value; 
   let cvvRegex = /^(\d{3})$/;
-    if (cardRegex.test(card) && zipRegex.test(zip) && cvvRegex.test(cvv)) {
-      return true; 
-    } else {
-      return false;
-    }
-  } else {
-    return true;
-  }
+  return cvvRegex.test(cvv);
 }
+
 //Functions to add/remove valid and not-valid classes and hints
 function notValid (element) {
   element.classList.add = 'not-valid';
@@ -189,27 +188,46 @@ function showValid (element) {
 
 //Event handler for form validation and submission
 form.addEventListener('submit', (event) => {
-  let nameLabel = nameField.parentElement;
+//Validate name
   if (isNameValid() === false) {
     event.preventDefault();
-    notValid(nameLabel);
+    notValid(nameField.parentElement);
   } else {
-    showValid(nameLabel);
+    showValid(nameField.parentElement);
   }
+//Validate email
   if (isEmailValid() === false) {
     event.preventDefault();
-    console.log(`Please enter a valid email`);
+    notValid(emailAddress.parentElement);
+  } else {
+    showValid(emailAddress.parentElement);
   }
+//Validate activity selection
   if (isActivitySelected() === 0) {
     event.preventDefault();
-    console.log(`Please select at least one actiivity`);
+    notValid(activities);
+  } else {
+    showValid(activities);
   }
-  if (isCardValid() === false) {
+//If payment type is cc, validate card number, zip, and CVV
+  if (paymentType.value === 'credit-card') {
+    if (isCardNumValid() === false) {
+        event.preventDefault();
+        notValid(cardNumber.parentElement);
+      } else {
+        showValid(cardNumber.parentElement);
+      }
+    if (isZipValid() === false) {
       event.preventDefault();
-      console.log(`Review cc details`);
+      notValid(zipCode.parentElement);
+    } else {
+      showValid(zipCode.parentElement);
     }
-  if (isNameValid() && isEmailValid() && isActivitySelected() && isCardValid()) {
-    event.preventDefault();
-    console.log(`Submitted`);
+    if (isCVV() === false) {
+      event.preventDefault();
+      notValid(cvvNumber.parentElement);
+    } else {
+      showValid(cvvNumber.parentElement);
+    }
   }
 });
