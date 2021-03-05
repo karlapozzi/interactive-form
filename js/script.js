@@ -184,10 +184,16 @@ const validations = {
   },
   email: () => {
     let email = emailAddress.value; 
+    let errorMessage = emailAddress.nextElementSibling;
     let regex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     //Credit to https://emailregex.com/ for the regex
     if (regex.test(email) == false){
       notValid(emailAddress.parentElement);
+      if (email == false) {
+        errorMessage.innerHTML = `Email cannot be blank`;
+        errorMessage.style.display = 'flex';
+        //Relied on this doc for display value options https://www.w3schools.com/jsref/prop_style_display.asp
+      } else errorMessage.innerHTML = `Email address must be formatted correctly`;
     } else {
       showValid(emailAddress.parentElement);
     }
