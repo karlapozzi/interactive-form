@@ -91,8 +91,20 @@ activities.addEventListener('change', (event) => {
   if (activity.checked === false) {
     costAmount -= +activityCost;
     }
-  totalCostP.innerHTML = `$${costAmount}`;
+  totalCostP.innerHTML = `Total: $${costAmount}`;
 });
+
+//Make focus more clear when selecting/de-selecting activities checkboxes
+for (let i = 0; i < checkboxes.length; i++) {
+checkboxes[i].addEventListener('focus', (event) => {
+  let label = event.target.parentNode;
+  label.className = 'focus';
+});
+checkboxes[i].addEventListener('blur', (event) => {
+  let label = document.querySelector('.focus');
+  label.className = '';
+});
+}
 
 
 //Set cc payment option and clear cc fields by default
